@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  data:
+    redis:
+      host: redis
+      port: 6379
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/api/accounts/**
+          filters:
+            - RewritePath=/api/accounts(?<remaining>.*), /api/v1/accounts${remaining}
+        # Transfer Service Routes
+        - id: transfer-service
+          uri: lb://transfer-service
+          predicates:
+            - Path=/api/transfers/**
+          filters:
+            - RewritePath=/api/transfers(?<remaining>.*), /api/v1/transfers${remaining}
+            - name: CircuitBreaker
+              args:
+                name: transferServiceCircuitBreaker
+                fallbackUri: forward:/fallback/transfer-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: false
+    hostname: api-gateway
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
