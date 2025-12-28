@@ -91,10 +91,10 @@ cleanup-scripts.ps1
 /utils.ps1
 /quick-start.ps1
 /CLAUDE.md
+scripts/
 
 # Keep important files
 !README.md
 !docker-compose.yml
 !init-databases.sql
 !pom.xml
-!scripts/**/*.ps1
