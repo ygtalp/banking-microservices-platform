@@ -1,0 +1,59 @@
+stateDiagram-v2
+    [*] --> PENDING: Transfer Created
+    
+    PENDING --> VALIDATING: Start SAGA
+    
+    VALIDATING --> VALIDATED: ValidationStep Success
+    VALIDATING --> COMPENSATING: ValidationStep Failed
+    
+    VALIDATED --> DEBIT_PENDING: Start DebitStep
+    
+    DEBIT_PENDING --> DEBIT_COMPLETED: DebitStep Success
+    DEBIT_PENDING --> COMPENSATING: DebitStep Failed
+    
+    DEBIT_COMPLETED --> CREDIT_PENDING: Start CreditStep
+    
+    CREDIT_PENDING --> COMPLETED: CreditStep Success
+    CREDIT_PENDING --> COMPENSATING: CreditStep Failed
+    
+    COMPENSATING --> COMPENSATED: All Compensations Success
+    COMPENSATING --> FAILED: Compensation Failed<br/>(Manual Intervention Required)
+    
+    COMPLETED --> [*]: ✅ Transfer Successful
+    COMPENSATED --> [*]: ↩️ Transfer Rolled Back
+    FAILED --> [*]: ❌ Manual Fix Required
+    
+    note right of PENDING
+        Initial State
+        - Idempotency check
+        - Transfer saved to DB
+    end note
+    
+    note right of VALIDATING
+        ValidationStep
+        - Check accounts exist
+        - Verify accounts active
+        - Validate sufficient balance
+        - Confirm currency match
+    end note
+    
+    note right of DEBIT_COMPLETED
+        DebitStep
+        - Debit source account
+        - Store transaction ID
+    end note
+    
+    note right of COMPLETED
+        CreditStep
+        - Credit destination account
+        - Store transaction ID
+        - Set completedAt timestamp
+    end note
+    
+    note right of COMPENSATING
+        Rollback Process
+        - Reverse steps in order:
+          1. Credit compensation
+          2. Debit compensation
+          3. Validation (no-op)
+    end note

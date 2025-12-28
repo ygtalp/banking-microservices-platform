@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="006-insert-default-roles" author="banking-platform">
+        <!-- Insert Default Roles -->
+        <insert tableName="roles">
+            <column name="role_name" value="ROLE_ADMIN"/>
+            <column name="description" value="System Administrator - Full access to all resources"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role_name" value="ROLE_CUSTOMER"/>
+            <column name="description" value="Regular customer - Access to own accounts and transactions"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role_name" value="ROLE_SUPPORT"/>
+            <column name="description" value="Customer support staff - View and assist customers"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role_name" value="ROLE_MANAGER"/>
+            <column name="description" value="Bank manager - Approve high-value transactions and customer verifications"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

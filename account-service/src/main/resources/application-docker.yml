@@ -43,3 +43,9 @@ management:
     web:
       exposure:
         include: health,info,metrics
+
+jwt:
+  secret: ${JWT_SECRET:BankingPlatformSecretKeyChangeThisInProduction2024}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+  issuer: banking-platform

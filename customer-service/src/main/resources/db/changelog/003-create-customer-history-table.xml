@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="003-create-customer-history-table" author="banking-platform">
+        <createTable tableName="customer_history">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <!-- Customer Reference -->
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"
+                           foreignKeyName="fk_customer_history_customer"
+                           references="customers(id)"
+                           deleteCascade="false"/>
+            </column>
+
+            <!-- Operation Details -->
+            <column name="operation" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="previous_status" type="VARCHAR(30)"/>
+            <column name="new_status" type="VARCHAR(30)"/>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="performed_by" type="VARCHAR(100)"/>
+
+            <!-- Timestamp -->
+            <column name="timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Indexes -->
+        <createIndex tableName="customer_history" indexName="idx_history_customer_id">
+            <column name="customer_id"/>
+        </createIndex>
+
+        <createIndex tableName="customer_history" indexName="idx_history_timestamp">
+            <column name="timestamp"/>
+        </createIndex>
+
+        <createIndex tableName="customer_history" indexName="idx_history_operation">
+            <column name="operation"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

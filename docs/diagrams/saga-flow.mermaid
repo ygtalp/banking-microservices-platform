@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant Client
+    participant Transfer as Transfer Service<br/>(SAGA Orchestrator)
+    participant Account as Account Service
+    participant DB as Transfer DB
+    participant Redis
+    
+    Client->>Transfer: POST /transfers<br/>{from, to, amount}
+    
+    Note over Transfer: Check Idempotency Key
+    Transfer->>Redis: GET idempotency:{key}
+    Redis-->>Transfer: null (not found)
+    
+    Transfer->>DB: Save Transfer<br/>Status: PENDING
+    Transfer->>Redis: SET idempotency:{key}
+    
+    rect rgb(200, 220, 255)
+        Note over Transfer,Account: SAGA Step 1: Validation
+        Transfer->>Transfer: Status: VALIDATING
+        Transfer->>Account: GET /accounts/{fromAccount}
+        Account-->>Transfer: Account Details
+        Transfer->>Account: GET /accounts/{toAccount}
+        Account-->>Transfer: Account Details
+        Note over Transfer: Validate:<br/>- Accounts exist<br/>- Accounts active<br/>- Sufficient balance<br/>- Currency match
+        Transfer->>Transfer: Status: VALIDATED
+    end
+    
+    rect rgb(200, 255, 200)
+        Note over Transfer,Account: SAGA Step 2: Debit
+        Transfer->>Transfer: Status: DEBIT_PENDING
+        Transfer->>Account: PUT /accounts/{fromAccount}/balance<br/>{amount: -100.00}
+        Account-->>Transfer: Transaction ID: TXN-DEBIT-001
+        Transfer->>Transfer: Store debitTransactionId
+        Transfer->>Transfer: Status: DEBIT_COMPLETED
+    end
+    
+    rect rgb(200, 255, 200)
+        Note over Transfer,Account: SAGA Step 3: Credit
+        Transfer->>Transfer: Status: CREDIT_PENDING
+        Transfer->>Account: PUT /accounts/{toAccount}/balance<br/>{amount: +100.00}
+        Account-->>Transfer: Transaction ID: TXN-CREDIT-002
+        Transfer->>Transfer: Store creditTransactionId
+    end
+    
+    Transfer->>Transfer: Status: COMPLETED
+    Transfer->>DB: Save Transfer<br/>completedAt: now()
+    Transfer-->>Client: 200 OK<br/>{status: COMPLETED}
+    
+    Note over Transfer,Client: ✅ Success Path
+    
+    rect rgb(255, 200, 200)
+        Note over Transfer,Account: ❌ Failure & Compensation
+        Note over Transfer: If Credit Step Fails:
+        Transfer->>Transfer: Status: COMPENSATING
+        
+        Note over Transfer,Account: Compensate Step 2 (DebitStep)
+        Transfer->>Account: PUT /accounts/{fromAccount}/balance<br/>{amount: +100.00}<br/>(Credit back)
+        Account-->>Transfer: Success
+        
+        Note over Transfer: Compensate Step 1 (ValidationStep)
+        Note over Transfer: No compensation needed<br/>(read-only step)
+        
+        Transfer->>Transfer: Status: COMPENSATED
+        Transfer-->>Client: 200 OK<br/>{status: COMPENSATED}
+    end
+    
+    Note over Transfer,Client: ↩️ Rollback Path

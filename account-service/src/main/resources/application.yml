@@ -61,3 +61,9 @@ logging:
     com.banking.account: DEBUG
     org.springframework.kafka: INFO
     org.hibernate.SQL: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET:BankingPlatformSecretKeyChangeThisInProduction2024}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+  issuer: banking-platform

@@ -1,0 +1,53 @@
+graph TB
+    subgraph "Client Layer"
+        Client[Client Applications]
+    end
+    
+    subgraph "API Layer"
+        Gateway[API Gateway<br/>Port: 8080<br/>Spring Cloud Gateway]
+    end
+    
+    subgraph "Service Discovery"
+        Eureka[Eureka Server<br/>Port: 8761<br/>Service Registry]
+    end
+    
+    subgraph "Microservices"
+        Account[Account Service<br/>Port: 8081<br/>Account Management]
+        Transfer[Transfer Service<br/>Port: 8082<br/>Money Transfers<br/>SAGA Orchestrator]
+    end
+    
+    subgraph "Data Layer"
+        AccountDB[(PostgreSQL<br/>banking_accounts)]
+        TransferDB[(PostgreSQL<br/>banking_transfers)]
+        Redis[(Redis<br/>Cache & Idempotency)]
+    end
+    
+    subgraph "Messaging"
+        Kafka[Apache Kafka<br/>Port: 9092<br/>Event Streaming]
+    end
+    
+    Client -->|HTTP/REST| Gateway
+    Gateway -->|Service Discovery| Eureka
+    Gateway -->|Route| Account
+    Gateway -->|Route| Transfer
+    
+    Account -.->|Register| Eureka
+    Transfer -.->|Register| Eureka
+    
+    Account -->|Read/Write| AccountDB
+    Account -->|Cache| Redis
+    Account -->|Publish Events| Kafka
+    
+    Transfer -->|Read/Write| TransferDB
+    Transfer -->|Idempotency Check| Redis
+    Transfer -->|Feign Client| Account
+    Transfer -->|Publish Events| Kafka
+    
+    style Gateway fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style Eureka fill:#2196F3,stroke:#1565C0,color:#fff
+    style Account fill:#FF9800,stroke:#E65100,color:#fff
+    style Transfer fill:#FF9800,stroke:#E65100,color:#fff
+    style AccountDB fill:#9C27B0,stroke:#6A1B9A,color:#fff
+    style TransferDB fill:#9C27B0,stroke:#6A1B9A,color:#fff
+    style Redis fill:#F44336,stroke:#C62828,color:#fff
+    style Kafka fill:#00BCD4,stroke:#00838F,color:#fff

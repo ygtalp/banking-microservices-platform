@@ -1,0 +1,33 @@
+stateDiagram-v2
+    [*] --> CLOSED: Initial State
+    
+    CLOSED --> OPEN: Failure Rate > 50%<br/>(within sliding window)
+    CLOSED --> CLOSED: Success
+    
+    OPEN --> HALF_OPEN: Wait Duration Elapsed<br/>(60 seconds)
+    OPEN --> OPEN: Requests Rejected<br/>(Fail Fast)
+    
+    HALF_OPEN --> CLOSED: Success Rate > 50%<br/>(3 test requests)
+    HALF_OPEN --> OPEN: Failure Rate > 50%
+    
+    note right of CLOSED
+        Normal Operation
+        - All requests allowed
+        - Success/failure tracked
+        - Sliding window: 10 calls
+    end note
+    
+    note right of OPEN
+        Circuit Open
+        - All requests rejected
+        - Fail fast (no wait)
+        - Wait 60s before retry
+        - Error: ServiceUnavailableException
+    end note
+    
+    note right of HALF_OPEN
+        Testing Recovery
+        - Limited requests (3)
+        - Test service health
+        - Decide: CLOSED or OPEN
+    end note

@@ -76,10 +76,25 @@ config-analysis-*.txt
 transfer-service-files-*.txt
 banking-platform-source.zip
 
+.claude
+docs/agents/*.md
+session_logs/*.md
+info/*.md
+info/*.txt
+SESSION_SUMMARY.md
+CLAUDE.md.first
+banking-platform-source.zip
+cleanup-scripts.ps1
+/reorganize-project.ps1
+/NEXT_SESSION_PROMPT.md
+/cleanup-scripts.ps1
+/utils.ps1
+/quick-start.ps1
+/CLAUDE.md
+
 # Keep important files
 !README.md
 !docker-compose.yml
 !init-databases.sql
 !pom.xml
 !scripts/**/*.ps1
-!docs/**/*.md

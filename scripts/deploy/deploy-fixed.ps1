@@ -59,7 +59,9 @@ $services = @(
     @{Name="Eureka Server"; Container="banking-eureka"; Port=8761},
     @{Name="API Gateway"; Container="banking-api-gateway"; Port=8080},
     @{Name="Account Service"; Container="banking-account-service"; Port=8081},
-    @{Name="Transfer Service"; Container="banking-transfer-service"; Port=8082}
+    @{Name="Transfer Service"; Container="banking-transfer-service"; Port=8082},
+    @{Name="Customer Service"; Container="banking-customer-service"; Port=8083},
+    @{Name="Auth Service"; Container="banking-auth-service"; Port=8084}
 )
 
 Start-Sleep -Seconds 10
@@ -111,6 +113,8 @@ Write-Host "  Success: Eureka Server    : http://localhost:8761" -ForegroundColo
 Write-Host "  Success: API Gateway      : http://localhost:8080" -ForegroundColor Green
 Write-Host "  Success: Account Service  : http://localhost:8081" -ForegroundColor Green
 Write-Host "  Success: Transfer Service : http://localhost:8082" -ForegroundColor Green
+Write-Host "  Success: Customer Service : http://localhost:8083" -ForegroundColor Green
+Write-Host "  Success: Auth Service     : http://localhost:8084" -ForegroundColor Green
 Write-Host ""
 
 Write-Host "====================================" -ForegroundColor Green

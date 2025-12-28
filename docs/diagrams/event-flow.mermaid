@@ -1,0 +1,52 @@
+graph LR
+    subgraph "Account Service"
+        A1[Account Controller]
+        A2[Account Service]
+        A3[Event Publisher]
+    end
+    
+    subgraph "Apache Kafka"
+        T1[account.events Topic]
+        T2[transfer.events Topic]
+    end
+    
+    subgraph "Transfer Service"
+        TR1[Transfer Controller]
+        TR2[Transfer Service]
+        TR3[SAGA Orchestrator]
+        TR4[Event Publisher]
+    end
+    
+    subgraph "Future Services"
+        N1[Notification Service<br/>Event Consumer]
+        H1[Transaction History<br/>Event Consumer]
+        A4[Analytics Service<br/>Event Consumer]
+    end
+    
+    A1 -->|Create Account| A2
+    A2 -->|Success| A3
+    A3 -->|Publish| T1
+    
+    TR1 -->|Execute Transfer| TR2
+    TR2 -->|Orchestrate| TR3
+    TR3 -->|Completed| TR4
+    TR4 -->|Publish| T2
+    
+    T1 -.->|Subscribe| N1
+    T1 -.->|Subscribe| H1
+    T1 -.->|Subscribe| A4
+    
+    T2 -.->|Subscribe| N1
+    T2 -.->|Subscribe| H1
+    T2 -.->|Subscribe| A4
+    
+    style T1 fill:#00BCD4,stroke:#00838F,color:#fff
+    style T2 fill:#00BCD4,stroke:#00838F,color:#fff
+    style A3 fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style TR4 fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style N1 fill:#FF9800,stroke:#E65100,color:#fff
+    style H1 fill:#FF9800,stroke:#E65100,color:#fff
+    style A4 fill:#FF9800,stroke:#E65100,color:#fff
+    
+    classDef eventClass fill:#00BCD4,stroke:#00838F,color:#fff
+    classDef serviceClass fill:#FF9800,stroke:#E65100,color:#fff

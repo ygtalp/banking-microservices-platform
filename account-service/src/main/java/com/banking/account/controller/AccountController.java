@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ApiResponse<AccountResponse>> createAccount(
             @Valid @RequestBody CreateAccountRequest request) {
         log.info("Received request to create account for customer: {}", request.getCustomerId());
@@ -75,6 +77,7 @@ public class AccountController {
     }
 
     @PostMapping("/{accountNumber}/freeze")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<AccountResponse>> freezeAccount(@PathVariable("accountNumber") String accountNumber) {
         log.info("Received request to freeze account: {}", accountNumber);
         AccountResponse response = accountService.freezeAccount(accountNumber);
@@ -89,6 +92,7 @@ public class AccountController {
     }
 
     @PostMapping("/{accountNumber}/close")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<AccountResponse>> closeAccount(@PathVariable("accountNumber") String accountNumber) {
         log.info("Received request to close account: {}", accountNumber);
         AccountResponse response = accountService.closeAccount(accountNumber);

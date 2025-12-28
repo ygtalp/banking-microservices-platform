@@ -1,0 +1,438 @@
+PS C:\Users\unaly\Desktop\banking-microservices-platform> tree /f
+Folder PATH listing
+Volume serial number is 9C84-C4D7
+C:.
+│   .gitignore
+│   banking-platform-source.zip
+│   cleanup-scripts.ps1
+│   docker-compose.yml
+│   init-databases.sql
+│   pom.xml
+│   quick-start.ps1
+│   reorganize-project.ps1
+│   utils.ps1
+│   
+├───.idea
+│       .gitignore
+│       compiler.xml
+│       encodings.xml
+│       jarRepositories.xml
+│       misc.xml
+│       vcs.xml
+│       workspace.xml
+│       
+├───account-service
+│   │   Dockerfile
+│   │   pom.xml
+│   │   
+│   ├───src
+│   │   └───main
+│   │       ├───java
+│   │       │   └───com
+│   │       │       └───banking
+│   │       │           └───account
+│   │       │               │   AccountServiceApplication.java
+│   │       │               │   
+│   │       │               ├───config
+│   │       │               │       KafkaConfig.java
+│   │       │               │       RedisConfig.java
+│   │       │               │       
+│   │       │               ├───controller
+│   │       │               │       AccountController.java
+│   │       │               │       AccountController.java.backup
+│   │       │               │       
+│   │       │               ├───dto
+│   │       │               │       AccountResponse.java
+│   │       │               │       ApiResponse.java
+│   │       │               │       BalanceUpdateRequest.java
+│   │       │               │       CreateAccountRequest.java
+│   │       │               │       
+│   │       │               ├───event
+│   │       │               │       AccountCreatedEvent.java
+│   │       │               │       AccountEvent.java
+│   │       │               │       AccountStatusChangedEvent.java
+│   │       │               │       BalanceChangedEvent.java
+│   │       │               │       
+│   │       │               ├───exception
+│   │       │               │       AccountAlreadyExistsException.java
+│   │       │               │       AccountNotFoundException.java
+│   │       │               │       GlobalExceptionHandler.java
+│   │       │               │       InsufficientBalanceException.java
+│   │       │               │       InvalidAccountStateException.java
+│   │       │               │       
+│   │       │               ├───model
+│   │       │               │       Account.java
+│   │       │               │       AccountHistory.java
+│   │       │               │       AccountStatus.java
+│   │       │               │       AccountType.java
+│   │       │               │       Currency.java
+│   │       │               │       
+│   │       │               ├───repository
+│   │       │               │       AccountHistoryRepository.java
+│   │       │               │       AccountRepository.java
+│   │       │               │       
+│   │       │               └───service
+│   │       │                       AccountService.java
+│   │       │                       AccountServiceImpl.java
+│   │       │                       EventPublisher.java
+│   │       │                       IbanGenerator.java
+│   │       │                       
+│   │       └───resources
+│   │               application-docker.yml
+│   │               application.yml
+│   │               
+│   └───target
+│       │   account-service-1.0.0.jar
+│       │   account-service-1.0.0.jar.original
+│       │   
+│       ├───classes
+│       │   │   application-docker.yml
+│       │   │   application.yml
+│       │   │   
+│       │   └───com
+│       │       └───banking
+│       │           └───account
+│       │               │   AccountServiceApplication.class
+│       │               │   
+│       │               ├───config
+│       │               │       KafkaConfig.class
+│       │               │       RedisConfig.class
+│       │               │       
+│       │               ├───controller
+│       │               │       AccountController.class
+│       │               │       
+│       │               ├───dto
+│       │               │       AccountResponse$AccountResponseBuilder.class
+│       │               │       AccountResponse.class
+│       │               │       ApiResponse$ApiResponseBuilder.class
+│       │               │       ApiResponse.class
+│       │               │       BalanceUpdateRequest$BalanceUpdateRequestBuilder.class
+│       │               │       BalanceUpdateRequest.class
+│       │               │       CreateAccountRequest$CreateAccountRequestBuilder.class
+│       │               │       CreateAccountRequest.class
+│       │               │       
+│       │               ├───event
+│       │               │       AccountCreatedEvent$AccountCreatedEventBuilder.class
+│       │               │       AccountCreatedEvent$AccountCreatedEventBuilderImpl.class
+│       │               │       AccountCreatedEvent.class
+│       │               │       AccountEvent$AccountEventBuilder.class
+│       │               │       AccountEvent.class
+│       │               │       AccountStatusChangedEvent$AccountStatusChangedEventBuilder.class
+│       │               │       AccountStatusChangedEvent$AccountStatusChangedEventBuilderImpl.class
+│       │               │       AccountStatusChangedEvent.class
+│       │               │       BalanceChangedEvent$BalanceChangedEventBuilder.class
+│       │               │       BalanceChangedEvent$BalanceChangedEventBuilderImpl.class
+│       │               │       BalanceChangedEvent.class
+│       │               │       
+│       │               ├───exception
+│       │               │       AccountAlreadyExistsException.class
+│       │               │       AccountNotFoundException.class
+│       │               │       GlobalExceptionHandler.class
+│       │               │       InsufficientBalanceException.class
+│       │               │       InvalidAccountStateException.class
+│       │               │       
+│       │               ├───model
+│       │               │       Account$AccountBuilder.class
+│       │               │       Account.class
+│       │               │       AccountHistory$AccountHistoryBuilder.class
+│       │               │       AccountHistory.class
+│       │               │       AccountStatus.class
+│       │               │       AccountType.class
+│       │               │       Currency.class
+│       │               │       
+│       │               ├───repository
+│       │               │       AccountHistoryRepository.class
+│       │               │       AccountRepository.class
+│       │               │       
+│       │               └───service
+│       │                       AccountService.class
+│       │                       AccountServiceImpl.class
+│       │                       EventPublisher.class
+│       │                       IbanGenerator.class
+│       │                       
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───maven-archiver
+│       │       pom.properties
+│       │       
+│       └───maven-status
+│           └───maven-compiler-plugin
+│               └───compile
+│                   └───default-compile
+│                           createdFiles.lst
+│                           inputFiles.lst
+│                           
+├───api-gateway
+│   │   Dockerfile
+│   │   pom.xml
+│   │   
+│   ├───src
+│   │   └───main
+│   │       ├───java
+│   │       │   └───com
+│   │       │       └───banking
+│   │       │           └───gateway
+│   │       │               │   ApiGatewayApplication.java
+│   │       │               │   
+│   │       │               ├───config
+│   │       │               │       GatewayConfig.java
+│   │       │               │       
+│   │       │               └───filter
+│   │       │                       LoggingFilter.java
+│   │       │                       
+│   │       └───resources
+│   │               application-docker.yml
+│   │               application.yml
+│   │               
+│   └───target
+│       │   api-gateway-1.0.0.jar
+│       │   api-gateway-1.0.0.jar.original
+│       │   
+│       ├───classes
+│       │   │   application-docker.yml
+│       │   │   application.yml
+│       │   │   
+│       │   └───com
+│       │       └───banking
+│       │           └───gateway
+│       │               │   ApiGatewayApplication.class
+│       │               │   
+│       │               ├───config
+│       │               │       GatewayConfig.class
+│       │               │       
+│       │               └───filter
+│       │                       LoggingFilter.class
+│       │                       
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───maven-archiver
+│       │       pom.properties
+│       │       
+│       └───maven-status
+│           └───maven-compiler-plugin
+│               └───compile
+│                   └───default-compile
+│                           createdFiles.lst
+│                           inputFiles.lst
+│                           
+├───docs
+├───eureka-server
+│   │   Dockerfile
+│   │   pom.xml
+│   │   
+│   ├───src
+│   │   └───main
+│   │       ├───java
+│   │       │   └───com
+│   │       │       └───banking
+│   │       │           └───eureka
+│   │       │                   EurekaServerApplication.java
+│   │       │                   
+│   │       └───resources
+│   │               application-docker.yml
+│   │               application.yml
+│   │               
+│   └───target
+│       │   eureka-server-1.0.0.jar
+│       │   eureka-server-1.0.0.jar.original
+│       │   
+│       ├───classes
+│       │   │   application-docker.yml
+│       │   │   application.yml
+│       │   │   
+│       │   └───com
+│       │       └───banking
+│       │           └───eureka
+│       │                   EurekaServerApplication.class
+│       │                   
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───maven-archiver
+│       │       pom.properties
+│       │       
+│       └───maven-status
+│           └───maven-compiler-plugin
+│               └───compile
+│                   └───default-compile
+│                           createdFiles.lst
+│                           inputFiles.lst
+│                           
+├───logs
+│       account-service-full.txt
+│       config-analysis-2025-12-09_181830.txt
+│       transfer-service-files-20251210_223055.txt
+│       
+├───postgres-init
+│       01-create-account-db.sql
+│       02-create-transfer-db.sql
+│       
+├───scripts
+│   │   README.md
+│   │   
+│   ├───build
+│   │       build-fixed.ps1
+│   │       build.ps1
+│   │       
+│   ├───debug
+│   │       debug.ps1
+│   │       debug2.ps1
+│   │       
+│   ├───deploy
+│   │       deploy-fixed.ps1
+│   │       deploy.ps1
+│   │       fix-and-rebuild.ps1
+│   │       
+│   └───test
+│           alternatif-hizli-test.ps1
+│           test-services-fixed.ps1
+│           test-services.ps1
+│           
+└───transfer-service
+    │   Dockerfile
+    │   pom.xml
+    │   
+    ├───src
+    │   └───main
+    │       ├───java
+    │       │   └───com
+    │       │       └───banking
+    │       │           └───transfer
+    │       │               │   TransferServiceApplication.java
+    │       │               │   
+    │       │               ├───client
+    │       │               │       AccountServiceClient.java
+    │       │               │       
+    │       │               ├───config
+    │       │               │       FeignConfig.java
+    │       │               │       KafkaProducerConfig.java
+    │       │               │       KafkaTopicConfig.java
+    │       │               │       RedisConfig.java
+    │       │               │       Resilience4jConfig.java
+    │       │               │       
+    │       │               ├───controller
+    │       │               │       TransferController.java
+    │       │               │       
+    │       │               ├───dto
+    │       │               │       AccountBalanceResponse.java
+    │       │               │       ApiResponse.java
+    │       │               │       TransactionRequest.java
+    │       │               │       TransactionResponse.java
+    │       │               │       TransferRequest.java
+    │       │               │       TransferResponse.java
+    │       │               │       
+    │       │               ├───exception
+    │       │               │       AccountNotFoundException.java
+    │       │               │       DuplicateTransferException.java
+    │       │               │       GlobalExceptionHandler.java
+    │       │               │       InsufficientBalanceException.java
+    │       │               │       InvalidTransferException.java
+    │       │               │       SagaCompensationException.java
+    │       │               │       TransferException.java
+    │       │               │       TransferNotFoundException.java
+    │       │               │       
+    │       │               ├───model
+    │       │               │       Transfer.java
+    │       │               │       TransferStatus.java
+    │       │               │       TransferType.java
+    │       │               │       
+    │       │               ├───repository
+    │       │               │       TransferRepository.java
+    │       │               │       
+    │       │               ├───saga
+    │       │               │       CreditStep.java
+    │       │               │       DebitStep.java
+    │       │               │       SagaStep.java
+    │       │               │       TransferSagaOrchestrator.java
+    │       │               │       ValidationStep.java
+    │       │               │       
+    │       │               └───service
+    │       │                       KafkaEventPublisher.java
+    │       │                       TransferService.java
+    │       │                       
+    │       └───resources
+    │               application-docker.yml
+    │               application.yml
+    │               
+    └───target
+        │   transfer-service-1.0.0.jar
+        │   transfer-service-1.0.0.jar.original
+        │   
+        ├───classes
+        │   │   application-docker.yml
+        │   │   application.yml
+        │   │   
+        │   └───com
+        │       └───banking
+        │           └───transfer
+        │               │   TransferServiceApplication.class
+        │               │   
+        │               ├───client
+        │               │       AccountServiceClient.class
+        │               │       
+        │               ├───config
+        │               │       FeignConfig.class
+        │               │       KafkaProducerConfig.class
+        │               │       KafkaTopicConfig.class
+        │               │       RedisConfig.class
+        │               │       Resilience4jConfig.class
+        │               │       
+        │               ├───controller
+        │               │       TransferController.class
+        │               │       
+        │               ├───dto
+        │               │       AccountBalanceResponse$AccountBalanceResponseBuilder.class
+        │               │       AccountBalanceResponse.class
+        │               │       ApiResponse$ApiResponseBuilder.class
+        │               │       ApiResponse.class
+        │               │       TransactionRequest$TransactionRequestBuilder.class
+        │               │       TransactionRequest.class
+        │               │       TransactionResponse$TransactionResponseBuilder.class
+        │               │       TransactionResponse.class
+        │               │       TransferRequest$TransferRequestBuilder.class
+        │               │       TransferRequest.class
+        │               │       TransferResponse$TransferResponseBuilder.class
+        │               │       TransferResponse.class
+        │               │       
+        │               ├───exception
+        │               │       AccountNotFoundException.class
+        │               │       DuplicateTransferException.class
+        │               │       GlobalExceptionHandler.class
+        │               │       InsufficientBalanceException.class
+        │               │       InvalidTransferException.class
+        │               │       SagaCompensationException.class
+        │               │       TransferException.class
+        │               │       TransferNotFoundException.class
+        │               │       
+        │               ├───model
+        │               │       Transfer$TransferBuilder.class
+        │               │       Transfer.class
+        │               │       TransferStatus.class
+        │               │       TransferType.class
+        │               │       
+        │               ├───repository
+        │               │       TransferRepository.class
+        │               │       
+        │               ├───saga
+        │               │       CreditStep.class
+        │               │       DebitStep.class
+        │               │       SagaStep.class
+        │               │       TransferSagaOrchestrator.class
+        │               │       ValidationStep.class
+        │               │       
+        │               └───service
+        │                       KafkaEventPublisher.class
+        │                       TransferService.class
+        │                       
+        ├───generated-sources
+        │   └───annotations
+        ├───maven-archiver
+        │       pom.properties
+        │       
+        └───maven-status
+            └───maven-compiler-plugin
+                └───compile
+                    └───default-compile
+                            createdFiles.lst
+                            inputFiles.lst
+                            
+PS C:\Users\unaly\Desktop\banking-microservices-platform> 

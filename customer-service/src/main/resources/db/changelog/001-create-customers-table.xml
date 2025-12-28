@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-customers-table" author="banking-platform">
+        <createTable tableName="customers">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <!-- Customer Identification -->
+            <column name="customer_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <!-- Personal Information -->
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- KYC Information -->
+            <column name="national_id" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="address" type="VARCHAR(200)"/>
+            <column name="city" type="VARCHAR(50)"/>
+            <column name="country" type="VARCHAR(50)"/>
+            <column name="postal_code" type="VARCHAR(10)"/>
+
+            <!-- Status Management -->
+            <column name="status" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_reason" type="VARCHAR(500)"/>
+            <column name="verified_at" type="TIMESTAMP"/>
+            <column name="verified_by" type="VARCHAR(100)"/>
+            <column name="approved_at" type="TIMESTAMP"/>
+            <column name="approved_by" type="VARCHAR(100)"/>
+
+            <!-- Risk & Compliance -->
+            <column name="risk_level" type="VARCHAR(20)"/>
+
+            <!-- Audit Fields -->
+            <column name="version" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Indexes for Performance -->
+        <createIndex tableName="customers" indexName="idx_customer_id">
+            <column name="customer_id"/>
+        </createIndex>
+
+        <createIndex tableName="customers" indexName="idx_email">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex tableName="customers" indexName="idx_national_id">
+            <column name="national_id"/>
+        </createIndex>
+
+        <createIndex tableName="customers" indexName="idx_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="customers" indexName="idx_created_at">
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

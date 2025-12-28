@@ -1,0 +1,56 @@
+erDiagram
+    ACCOUNTS ||--o{ ACCOUNT_HISTORY : has
+    ACCOUNTS {
+        bigint id PK
+        varchar account_number UK "ACC-UUID"
+        varchar iban UK "TR26-format"
+        varchar customer_name
+        varchar account_type "CHECKING,SAVINGS,BUSINESS"
+        decimal balance "precision=19,scale=2"
+        varchar currency "TRY,USD,EUR,GBP"
+        varchar status "ACTIVE,SUSPENDED,CLOSED"
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    ACCOUNT_HISTORY {
+        bigint id PK
+        varchar account_number FK
+        varchar operation "CREATE,UPDATE_BALANCE,etc"
+        decimal previous_balance "precision=19,scale=2"
+        decimal new_balance "precision=19,scale=2"
+        varchar description
+        timestamp created_at
+    }
+    
+    TRANSFERS ||--o{ TRANSFER_STEPS : contains
+    TRANSFERS {
+        bigint id PK
+        varchar transfer_reference UK "TRF-UUID"
+        varchar from_account_number
+        varchar to_account_number
+        decimal amount "precision=19,scale=2"
+        varchar currency
+        varchar description
+        varchar status "PENDING,VALIDATING,COMPLETED,etc"
+        varchar transfer_type "INTERNAL,EXTERNAL,INTERNATIONAL"
+        varchar idempotency_key UK
+        varchar debit_transaction_id
+        varchar credit_transaction_id
+        varchar failure_reason
+        timestamp created_at
+        timestamp completed_at
+    }
+    
+    TRANSFER_STEPS {
+        bigint id PK
+        varchar transfer_reference FK
+        varchar step_name "ValidationStep,DebitStep,CreditStep"
+        varchar status "PENDING,EXECUTING,COMPLETED,FAILED"
+        varchar details
+        timestamp started_at
+        timestamp completed_at
+    }
+    
+    note "Database: banking_accounts"
+    note "Database: banking_transfers"
