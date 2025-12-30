@@ -1,0 +1,115 @@
+{
+  "dashboard": {
+    "title": "Banking Platform - JVM Metrics",
+    "tags": ["banking", "jvm"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Heap Memory Usage",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{area=\"heap\",job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Used"
+          },
+          {
+            "expr": "jvm_memory_max_bytes{area=\"heap\",job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Max"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "bytes"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Non-Heap Memory Usage",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{area=\"nonheap\",job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Used"
+          },
+          {
+            "expr": "jvm_memory_max_bytes{area=\"nonheap\",job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Max"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "bytes"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "GC Count",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_gc_pause_seconds_count{job=~\".*-service\"}[5m])",
+            "legendFormat": "{{job}} - {{action}}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "GC Duration",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_gc_pause_seconds_sum{job=~\".*-service\"}[5m])",
+            "legendFormat": "{{job}} - {{action}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Thread Count",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "jvm_threads_live_threads{job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Live"
+          },
+          {
+            "expr": "jvm_threads_daemon_threads{job=~\".*-service\"}",
+            "legendFormat": "{{job}} - Daemon"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "CPU Usage",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "process_cpu_usage{job=~\".*-service\"}",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percentunit"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"}
+  }
+}

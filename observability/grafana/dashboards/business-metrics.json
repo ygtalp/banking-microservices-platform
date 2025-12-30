@@ -1,0 +1,83 @@
+{
+  "dashboard": {
+    "title": "Banking Platform - Business Metrics",
+    "tags": ["banking", "business"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Account Operations (rate/min)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"account-service\",uri=~\"/accounts.*\"}[1m]) * 60",
+            "legendFormat": "{{method}} {{uri}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Transfer Operations (rate/min)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"transfer-service\",uri=~\"/transfers.*\"}[1m]) * 60",
+            "legendFormat": "{{method}} {{uri}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Transfer Success Rate (%)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"transfer-service\",status=~\"2..\"}[5m]) / rate(http_server_requests_seconds_count{job=\"transfer-service\"}[5m]) * 100",
+            "legendFormat": "Success Rate"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Authentication Operations (rate/min)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"auth-service\",uri=~\"/auth.*\"}[1m]) * 60",
+            "legendFormat": "{{uri}}"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Notification Operations (rate/min)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"notification-service\",uri=~\"/notifications.*\"}[1m]) * 60",
+            "legendFormat": "{{method}} {{uri}}"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Customer KYC Operations (rate/min)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=\"customer-service\",uri=~\"/customers.*\"}[1m]) * 60",
+            "legendFormat": "{{method}} {{uri}}"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"}
+  }
+}

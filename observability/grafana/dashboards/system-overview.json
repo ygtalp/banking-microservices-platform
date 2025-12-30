@@ -1,0 +1,71 @@
+{
+  "dashboard": {
+    "title": "Banking Platform - System Overview",
+    "tags": ["banking", "overview"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Services Status",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 24, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "up{job=~\".*-service\"}",
+            "legendFormat": "{{job}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "HTTP Request Rate (req/s)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=~\".*-service\"}[5m])",
+            "legendFormat": "{{job}} - {{uri}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "HTTP Response Time (p95)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{job=~\".*-service\"}[5m]))",
+            "legendFormat": "{{job}}"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "JVM Memory Usage",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{job=~\".*-service\",area=\"heap\"} / jvm_memory_max_bytes{job=~\".*-service\",area=\"heap\"}",
+            "legendFormat": "{{job}}"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Error Rate (%)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{job=~\".*-service\",status=~\"5..\"}[5m]) / rate(http_server_requests_seconds_count{job=~\".*-service\"}[5m]) * 100",
+            "legendFormat": "{{job}}"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"}
+  }
+}

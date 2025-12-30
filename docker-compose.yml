@@ -88,6 +88,124 @@ services:
     networks:
       - banking-network
 
+  # Observability Stack
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: banking-zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mem
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9411/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: banking-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: banking-grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: false
+      GF_SERVER_ROOT_URL: http://localhost:3000
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: banking-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: banking-logstash
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - ./observability/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./observability/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - banking-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: banking-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   eureka-server:
     build:
       context: ./eureka-server
@@ -147,6 +265,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
+      zipkin:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
@@ -159,6 +279,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     networks:
       - banking-network
     healthcheck:
@@ -184,6 +305,8 @@ services:
         condition: service_started
       account-service:
         condition: service_started
+      zipkin:
+        condition: service_healthy
     ports:
       - "8082:8082"
     environment:
@@ -196,6 +319,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     networks:
       - banking-network
     healthcheck:
@@ -221,6 +345,8 @@ services:
         condition: service_started
       account-service:
         condition: service_started
+      zipkin:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:
@@ -233,6 +359,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     networks:
       - banking-network
     healthcheck:
@@ -256,6 +383,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
+      zipkin:
+        condition: service_healthy
     ports:
       - "8084:8084"
     environment:
@@ -268,6 +397,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     networks:
       - banking-network
     healthcheck:
@@ -291,6 +421,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
+      zipkin:
+        condition: service_healthy
     ports:
       - "8085:8085"
     environment:
@@ -306,6 +438,7 @@ services:
       EMAIL_ENABLED: false
       SMS_ENABLED: false
       PUSH_ENABLED: false
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
     networks:
       - banking-network
     healthcheck:
@@ -321,6 +454,9 @@ volumes:
   zookeeper_data:
   zookeeper_logs:
   kafka_data:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:
 
 networks:
   banking-network:
