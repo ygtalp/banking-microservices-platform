@@ -57,7 +57,7 @@ public class AuthService {
         }
 
         // Get CUSTOMER role (default for new users)
-        Role customerRole = roleRepository.findByRoleName("CUSTOMER")
+        Role customerRole = roleRepository.findByRoleName("ROLE_CUSTOMER")
                 .orElseThrow(() -> new RuntimeException("Default CUSTOMER role not found"));
 
         // Create new user
@@ -83,10 +83,11 @@ public class AuthService {
         publishUserRegisteredEvent(user);
 
         // Generate tokens
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                user.getEmail(), request.getPassword());
-        String accessToken = jwtTokenProvider.generateAccessToken(authentication);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+        List<String> roleNames = user.getRoles().stream()
+                .map(Role::getRoleName)
+                .collect(Collectors.toList());
+        String accessToken = jwtTokenProvider.generateAccessTokenFromUsername(user.getEmail(), roleNames);
+        String refreshToken = jwtTokenProvider.generateRefreshTokenFromUsername(user.getEmail(), roleNames);
 
         // Build response
         LoginResponse loginResponse = buildLoginResponse(user, accessToken, refreshToken);
