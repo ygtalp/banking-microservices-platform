@@ -1,0 +1,22 @@
+package com.banking.transaction.event;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TransferCompletedEvent {
+    private String transferReference;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+    private BigDecimal amount;
+    private String currency;
+    private String debitTransactionId;
+    private String creditTransactionId;
+}

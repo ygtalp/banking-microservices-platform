@@ -21,6 +21,7 @@
         <module>customer-service</module>
         <module>auth-service</module>
         <module>notification-service</module>
+        <module>transaction-service</module>
     </modules>
 
     <properties>

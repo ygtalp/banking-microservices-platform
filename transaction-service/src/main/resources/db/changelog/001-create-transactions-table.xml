@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-transactions-table" author="system">
+        <createTable tableName="transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="account_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance_before" type="DECIMAL(19,2)"/>
+            <column name="balance_after" type="DECIMAL(19,2)"/>
+            <column name="reference" type="VARCHAR(100)"/>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_account" type="VARCHAR(100)"/>
+            <column name="destination_account" type="VARCHAR(100)"/>
+            <column name="metadata" type="TEXT"/>
+            <column name="transaction_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_account_number" tableName="transactions">
+            <column name="account_number"/>
+        </createIndex>
+
+        <createIndex indexName="idx_transaction_date" tableName="transactions">
+            <column name="transaction_date"/>
+        </createIndex>
+
+        <createIndex indexName="idx_reference" tableName="transactions">
+            <column name="reference"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -23,6 +23,15 @@ eureka:
     prefer-ip-address: true
     hostname: transfer-service
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+
 logging:
   level:
     com.banking.transfer: INFO
