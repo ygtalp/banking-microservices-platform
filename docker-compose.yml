@@ -331,8 +331,8 @@ services:
 
   customer-service:
     build:
-      context: .
-      dockerfile: customer-service/Dockerfile
+      context: ./customer-service
+      dockerfile: Dockerfile
     container_name: banking-customer-service
     depends_on:
       postgres:
@@ -371,8 +371,8 @@ services:
 
   auth-service:
     build:
-      context: .
-      dockerfile: auth-service/Dockerfile
+      context: ./auth-service
+      dockerfile: Dockerfile
     container_name: banking-auth-service
     depends_on:
       postgres:
@@ -409,8 +409,8 @@ services:
 
   notification-service:
     build:
-      context: .
-      dockerfile: notification-service/Dockerfile
+      context: ./notification-service
+      dockerfile: Dockerfile
     container_name: banking-notification-service
     depends_on:
       postgres:
@@ -481,6 +481,44 @@ services:
       - banking-network
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8086/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  fraud-detection-service:
+    build:
+      context: ./fraud-detection-service
+      dockerfile: Dockerfile
+    container_name: banking-fraud-detection-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      zipkin:
+        condition: service_healthy
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fraud_detection_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8087/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 5

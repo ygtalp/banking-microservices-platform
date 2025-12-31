@@ -64,6 +64,15 @@ scrape_configs:
           application: 'transaction-service'
           service: 'banking'
 
+  # Fraud Detection Service
+  - job_name: 'fraud-detection-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['fraud-detection-service:8087']
+        labels:
+          application: 'fraud-detection-service'
+          service: 'banking'
+
   # API Gateway
   - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'

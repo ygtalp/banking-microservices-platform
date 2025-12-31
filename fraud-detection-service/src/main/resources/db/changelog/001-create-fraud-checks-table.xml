@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-fraud-checks-table" author="claude">
+        <createTable tableName="fraud_checks">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="check_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="transfer_reference" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_score" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_level" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="checked_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reviewed_by" type="VARCHAR(100)"/>
+            <column name="reviewed_at" type="TIMESTAMP"/>
+            <column name="review_notes" type="TEXT"/>
+            <column name="metadata" type="TEXT"/>
+        </createTable>
+
+        <createTable tableName="fraud_check_reasons">
+            <column name="fraud_check_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="VARCHAR(500)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="fraud_check_reasons"
+                                 baseColumnNames="fraud_check_id"
+                                 constraintName="fk_fraud_check_reasons"
+                                 referencedTableName="fraud_checks"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="fraud_checks" indexName="idx_transfer_reference">
+            <column name="transfer_reference"/>
+        </createIndex>
+        <createIndex tableName="fraud_checks" indexName="idx_account_number">
+            <column name="account_number"/>
+        </createIndex>
+        <createIndex tableName="fraud_checks" indexName="idx_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="fraud_checks" indexName="idx_risk_level">
+            <column name="risk_level"/>
+        </createIndex>
+        <createIndex tableName="fraud_checks" indexName="idx_checked_at">
+            <column name="checked_at"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="004-insert-default-fraud-rules" author="claude">
+        <!-- Rule 1: Velocity Check -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-VELOCITY-001"/>
+            <column name="rule_name" value="High Velocity Check"/>
+            <column name="description" value="Detect multiple transfers within short time window"/>
+            <column name="rule_type" value="VELOCITY"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="time_window_minutes" valueNumeric="60"/>
+            <column name="max_count" valueNumeric="5"/>
+            <column name="risk_points" valueNumeric="30"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Rule 2: High Amount Threshold -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-AMOUNT-001"/>
+            <column name="rule_name" value="High Amount Threshold"/>
+            <column name="description" value="Detect single transfers exceeding amount threshold"/>
+            <column name="rule_type" value="AMOUNT"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" valueNumeric="50000.00"/>
+            <column name="risk_points" valueNumeric="25"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Rule 3: Daily Limit -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-DAILY-001"/>
+            <column name="rule_name" value="Daily Transaction Limit"/>
+            <column name="description" value="Detect accounts exceeding daily transfer limit"/>
+            <column name="rule_type" value="DAILY_LIMIT"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" valueNumeric="100000.00"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Rule 4: Night Time Transfer -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-TIME-001"/>
+            <column name="rule_name" value="Night Time High Amount"/>
+            <column name="description" value="Detect high amount transfers during night hours"/>
+            <column name="rule_type" value="TIME"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" valueNumeric="10000.00"/>
+            <column name="start_hour" valueNumeric="0"/>
+            <column name="end_hour" valueNumeric="6"/>
+            <column name="risk_points" valueNumeric="10"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Rule 5: Rapid Succession -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-PATTERN-001"/>
+            <column name="rule_name" value="Rapid Succession Pattern"/>
+            <column name="description" value="Detect rapid succession of transfers (within 2 minutes)"/>
+            <column name="rule_type" value="PATTERN"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="risk_points" valueNumeric="15"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Rule 6: Unusual Amount Pattern -->
+        <insert tableName="fraud_rules">
+            <column name="rule_id" value="RULE-PATTERN-002"/>
+            <column name="rule_name" value="Unusual Amount Pattern"/>
+            <column name="description" value="Detect amounts significantly higher than account average (3x)"/>
+            <column name="rule_type" value="PATTERN"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

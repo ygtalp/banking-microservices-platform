@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="002-create-fraud-rules-table" author="claude">
+        <createTable tableName="fraud_rules">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="rule_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="rule_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="rule_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="threshold" type="DECIMAL(19,2)"/>
+            <column name="time_window_minutes" type="INTEGER"/>
+            <column name="max_count" type="INTEGER"/>
+            <column name="risk_points" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_hour" type="INTEGER"/>
+            <column name="end_hour" type="INTEGER"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <createIndex tableName="fraud_rules" indexName="idx_rule_name">
+            <column name="rule_name"/>
+        </createIndex>
+        <createIndex tableName="fraud_rules" indexName="idx_enabled">
+            <column name="enabled"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
