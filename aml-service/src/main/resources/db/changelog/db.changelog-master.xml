@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <include file="db/changelog/001-create-aml-alerts-table.xml"/>
+    <include file="db/changelog/002-create-sanction-matches-table.xml"/>
+    <include file="db/changelog/003-create-transaction-monitoring-table.xml"/>
+    <include file="db/changelog/004-create-monitoring-rules-table.xml"/>
+    <include file="db/changelog/005-insert-default-rules.xml"/>
+    <include file="db/changelog/006-create-sanction-lists-table.xml"/>
+    <include file="db/changelog/007-create-customer-risk-profiles-table.xml"/>
+    <include file="db/changelog/008-create-regulatory-reports-table.xml"/>
+    <include file="db/changelog/009-create-aml-cases-table.xml"/>
+    <include file="db/changelog/010-insert-enhanced-monitoring-rules.xml"/>
+</databaseChangeLog>

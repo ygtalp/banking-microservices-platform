@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="009-create-aml-cases-table" author="claude">
+        <createTable tableName="aml_cases">
+            <column name="case_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="case_number" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="OPEN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="VARCHAR(20)" defaultValue="MEDIUM">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_number" type="VARCHAR(50)"/>
+            <column name="case_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_level" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="investigation_summary" type="TEXT"/>
+            <column name="findings" type="TEXT"/>
+            <column name="recommendations" type="TEXT"/>
+            <column name="assigned_to" type="VARCHAR(100)"/>
+            <column name="assigned_at" type="TIMESTAMP"/>
+            <column name="assigned_by" type="VARCHAR(100)"/>
+            <column name="opened_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="opened_by" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="investigation_started_at" type="TIMESTAMP"/>
+            <column name="due_date" type="TIMESTAMP"/>
+            <column name="closed_at" type="TIMESTAMP"/>
+            <column name="closed_by" type="VARCHAR(100)"/>
+            <column name="resolution" type="VARCHAR(50)"/>
+            <column name="resolution_notes" type="TEXT"/>
+            <column name="action_taken" type="TEXT"/>
+            <column name="requires_sar_filing" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sar_filed" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sar_report_id" type="VARCHAR(50)"/>
+            <column name="sar_filed_at" type="TIMESTAMP"/>
+            <column name="customer_blocked" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_blocked_at" type="TIMESTAMP"/>
+            <column name="customer_blocked_reason" type="TEXT"/>
+            <column name="relationship_terminated" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="escalated" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="escalated_to" type="VARCHAR(100)"/>
+            <column name="escalated_at" type="TIMESTAMP"/>
+            <column name="escalation_reason" type="TEXT"/>
+            <column name="sla_status" type="VARCHAR(20)" defaultValue="ON_TRACK"/>
+            <column name="days_open" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="is_overdue" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Child tables for collections -->
+        <createTable tableName="aml_case_alerts">
+            <column name="case_id" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_case_alerts_case_id"
+                            references="aml_cases(case_id)" deleteCascade="true"/>
+            </column>
+            <column name="alert_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="aml_case_transactions">
+            <column name="case_id" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_case_transactions_case_id"
+                            references="aml_cases(case_id)" deleteCascade="true"/>
+            </column>
+            <column name="transaction_reference" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="aml_case_notes">
+            <column name="case_id" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_case_notes_case_id"
+                            references="aml_cases(case_id)" deleteCascade="true"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="author" type="VARCHAR(100)"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="note_type" type="VARCHAR(20)" defaultValue="GENERAL"/>
+        </createTable>
+
+        <!-- Indexes for main table -->
+        <createIndex tableName="aml_cases" indexName="idx_case_number">
+            <column name="case_number"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_priority">
+            <column name="priority"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_customer_id">
+            <column name="customer_id"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_assigned_to">
+            <column name="assigned_to"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_opened_at">
+            <column name="opened_at"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_due_date">
+            <column name="due_date"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_is_overdue">
+            <column name="is_overdue"/>
+        </createIndex>
+        <createIndex tableName="aml_cases" indexName="idx_case_escalated">
+            <column name="escalated"/>
+        </createIndex>
+
+        <!-- Indexes for child tables -->
+        <createIndex tableName="aml_case_alerts" indexName="idx_case_alerts_case_id">
+            <column name="case_id"/>
+        </createIndex>
+        <createIndex tableName="aml_case_transactions" indexName="idx_case_trans_case_id">
+            <column name="case_id"/>
+        </createIndex>
+        <createIndex tableName="aml_case_notes" indexName="idx_case_notes_case_id">
+            <column name="case_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

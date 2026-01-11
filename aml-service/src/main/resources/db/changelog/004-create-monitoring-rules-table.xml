@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="004-create-monitoring-rules-table" author="claude">
+        <createTable tableName="monitoring_rules">
+            <column name="rule_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rule_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rule_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="threshold_amount" type="DECIMAL(19,2)"/>
+            <column name="threshold_count" type="INTEGER"/>
+            <column name="time_window_minutes" type="INTEGER"/>
+            <column name="risk_points" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

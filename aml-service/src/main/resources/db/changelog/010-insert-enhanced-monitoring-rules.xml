@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="010-insert-enhanced-monitoring-rules" author="claude">
+        <!-- Cross-Border Transaction Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-CROSS-BORDER"/>
+            <column name="rule_name" value="Cross-Border High-Value Transaction"/>
+            <column name="rule_type" value="CROSS_BORDER"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="15000.00"/>
+            <column name="time_window_minutes" valueNumeric="0"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="description" value="Flags international transfers above €15,000 for additional scrutiny"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- High-Risk Country Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-HIGH-RISK-COUNTRY"/>
+            <column name="rule_name" value="High-Risk Country Transaction"/>
+            <column name="rule_type" value="HIGH_RISK_COUNTRY"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="5000.00"/>
+            <column name="time_window_minutes" valueNumeric="0"/>
+            <column name="risk_points" valueNumeric="25"/>
+            <column name="description" value="Flags transactions to/from FATF high-risk jurisdictions above €5,000"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- PEP Transaction Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-PEP-TRANSACTION"/>
+            <column name="rule_name" value="PEP High-Value Transaction"/>
+            <column name="rule_type" value="PEP_SCREENING"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="10000.00"/>
+            <column name="time_window_minutes" valueNumeric="0"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="description" value="Enhanced monitoring for Politically Exposed Persons (PEPs) - transactions above €10,000"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- Sanctioned Country Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-SANCTIONED-COUNTRY"/>
+            <column name="rule_name" value="Sanctioned Country Transaction"/>
+            <column name="rule_type" value="SANCTIONS_CHECK"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="0.00"/>
+            <column name="time_window_minutes" valueNumeric="0"/>
+            <column name="risk_points" valueNumeric="50"/>
+            <column name="description" value="Critical alert for any transaction to/from sanctioned countries"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- Cash-Intensive Business Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-CASH-INTENSIVE"/>
+            <column name="rule_name" value="Cash-Intensive Business Pattern"/>
+            <column name="rule_type" value="BUSINESS_TYPE"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="20000.00"/>
+            <column name="time_window_minutes" valueNumeric="1440"/>
+            <column name="risk_points" valueNumeric="15"/>
+            <column name="description" value="Monitors cash-intensive businesses (MSB, casinos, etc.) - daily volume above €20,000"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- Rapid Movement Rule (layering) -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-LAYERING"/>
+            <column name="rule_name" value="Rapid Fund Movement (Layering)"/>
+            <column name="rule_type" value="LAYERING"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="5000.00"/>
+            <column name="time_window_minutes" valueNumeric="60"/>
+            <column name="risk_points" valueNumeric="25"/>
+            <column name="description" value="Detects layering pattern - funds received and immediately transferred elsewhere within 1 hour"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+
+        <!-- Cryptocurrency Exchange Rule -->
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-CRYPTO-EXCHANGE"/>
+            <column name="rule_name" value="Cryptocurrency Exchange Transaction"/>
+            <column name="rule_type" value="CRYPTO_RELATED"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold" value="10000.00"/>
+            <column name="time_window_minutes" valueNumeric="0"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="description" value="Enhanced monitoring for cryptocurrency exchange transactions above €10,000"/>
+            <column name="created_at" valueDate="2026-01-01T00:00:00"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

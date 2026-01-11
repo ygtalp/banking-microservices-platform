@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="005-insert-default-rules" author="claude">
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-001"/>
+            <column name="rule_name" value="High Velocity Alert"/>
+            <column name="rule_type" value="VELOCITY"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold_count" valueNumeric="5"/>
+            <column name="time_window_minutes" valueNumeric="60"/>
+            <column name="risk_points" valueNumeric="30"/>
+            <column name="description" value="5+ transfers in 60 minutes"/>
+        </insert>
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-002"/>
+            <column name="rule_name" value="Large Amount Alert"/>
+            <column name="rule_type" value="AMOUNT"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold_amount" valueNumeric="50000.00"/>
+            <column name="risk_points" valueNumeric="25"/>
+            <column name="description" value="Single transfer >50,000"/>
+        </insert>
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-003"/>
+            <column name="rule_name" value="Daily Limit Exceeded"/>
+            <column name="rule_type" value="DAILY_LIMIT"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold_amount" valueNumeric="100000.00"/>
+            <column name="risk_points" valueNumeric="20"/>
+            <column name="description" value="Daily total >100,000"/>
+        </insert>
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-004"/>
+            <column name="rule_name" value="Night Transfer Alert"/>
+            <column name="rule_type" value="TIME_BASED"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold_amount" valueNumeric="10000.00"/>
+            <column name="risk_points" valueNumeric="10"/>
+            <column name="description" value="Night transfers (00:00-06:00) >10,000"/>
+        </insert>
+        <insert tableName="monitoring_rules">
+            <column name="rule_id" value="RULE-005"/>
+            <column name="rule_name" value="Structuring Pattern"/>
+            <column name="rule_type" value="STRUCTURING"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="threshold_amount" valueNumeric="10000.00"/>
+            <column name="risk_points" valueNumeric="15"/>
+            <column name="description" value="Amounts just below 10,000 threshold"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

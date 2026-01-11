@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="008-create-regulatory-reports-table" author="claude">
+        <createTable tableName="regulatory_reports">
+            <column name="report_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="report_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="report_number" type="VARCHAR(50)">
+                <constraints unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="DRAFT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_number" type="VARCHAR(50)"/>
+            <column name="alert_id" type="VARCHAR(50)"/>
+            <column name="case_id" type="VARCHAR(50)"/>
+            <column name="transaction_references" type="TEXT"/>
+            <column name="suspicious_amount" type="DECIMAL(19,2)"/>
+            <column name="currency" type="VARCHAR(3)"/>
+            <column name="transaction_date_from" type="TIMESTAMP"/>
+            <column name="transaction_date_to" type="TIMESTAMP"/>
+            <column name="suspicion_category" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="suspicion_indicators" type="TEXT"/>
+            <column name="narrative" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_assessment" type="TEXT"/>
+            <column name="reporting_institution" type="VARCHAR(200)"/>
+            <column name="reporting_officer" type="VARCHAR(100)"/>
+            <column name="reporting_officer_email" type="VARCHAR(100)"/>
+            <column name="compliance_officer" type="VARCHAR(100)"/>
+            <column name="filed_to_authority" type="VARCHAR(100)"/>
+            <column name="authority_reference_number" type="VARCHAR(50)"/>
+            <column name="filed_at" type="TIMESTAMP"/>
+            <column name="acknowledgment_received_at" type="TIMESTAMP"/>
+            <column name="has_supporting_documents" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_count" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="document_paths" type="TEXT"/>
+            <column name="exported_format" type="VARCHAR(20)"/>
+            <column name="exported_file_path" type="VARCHAR(500)"/>
+            <column name="exported_at" type="TIMESTAMP"/>
+            <column name="prepared_by" type="VARCHAR(100)"/>
+            <column name="reviewed_by" type="VARCHAR(100)"/>
+            <column name="reviewed_at" type="TIMESTAMP"/>
+            <column name="approved_by" type="VARCHAR(100)"/>
+            <column name="approved_at" type="TIMESTAMP"/>
+            <column name="rejection_reason" type="TEXT"/>
+            <column name="remarks" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Indexes for performance -->
+        <createIndex tableName="regulatory_reports" indexName="idx_report_number">
+            <column name="report_number"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_type">
+            <column name="report_type"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_customer_id">
+            <column name="customer_id"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_alert_id">
+            <column name="alert_id"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_case_id">
+            <column name="case_id"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_filed_at">
+            <column name="filed_at"/>
+        </createIndex>
+        <createIndex tableName="regulatory_reports" indexName="idx_report_suspicion_cat">
+            <column name="suspicion_category"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

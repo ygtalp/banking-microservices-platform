@@ -1,0 +1,96 @@
+spring:
+  application:
+    name: sepa-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sepa_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000ms
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000
+
+server:
+  port: 8092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
+
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 10000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      accountService:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 60000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+jwt:
+  secret: your-very-long-secret-key-that-is-at-least-512-bits-long-for-hs512-algorithm-security-this-should-be-changed-in-production-environment-and-stored-securely-in-vault-or-secrets-manager
+
+logging:
+  level:
+    com.banking.sepa: INFO
+    org.springframework.cloud.openfeign: DEBUG

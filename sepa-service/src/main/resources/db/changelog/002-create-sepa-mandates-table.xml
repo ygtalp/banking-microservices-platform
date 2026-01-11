@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="002-create-sepa-mandates-table" author="claude">
+        <createTable tableName="sepa_mandates">
+            <column name="mandate_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="mandate_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="debtor_name" type="VARCHAR(140)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="debtor_iban" type="VARCHAR(34)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="debtor_bic" type="VARCHAR(11)"/>
+            <column name="debtor_account_number" type="VARCHAR(50)"/>
+            <column name="debtor_address" type="VARCHAR(200)"/>
+            <column name="debtor_country" type="VARCHAR(2)"/>
+            <column name="creditor_name" type="VARCHAR(140)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creditor_id" type="VARCHAR(35)"/>
+            <column name="creditor_iban" type="VARCHAR(34)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creditor_bic" type="VARCHAR(11)"/>
+            <column name="sequence_type" type="VARCHAR(20)" defaultValue="OOFF">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amendment_indicator" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_mandate_id" type="VARCHAR(50)"/>
+            <column name="original_creditor_id" type="VARCHAR(35)"/>
+            <column name="signature_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="signed_by" type="VARCHAR(100)"/>
+            <column name="signature_method" type="VARCHAR(50)"/>
+            <column name="signature_location" type="VARCHAR(100)"/>
+            <column name="activation_date" type="DATE"/>
+            <column name="first_collection_date" type="DATE"/>
+            <column name="last_collection_date" type="DATE"/>
+            <column name="max_amount" type="DECIMAL(19,2)"/>
+            <column name="frequency" type="VARCHAR(20)"/>
+            <column name="cancelled_at" type="TIMESTAMP"/>
+            <column name="cancelled_by" type="VARCHAR(100)"/>
+            <column name="cancellation_reason" type="TEXT"/>
+            <column name="total_collections" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="successful_collections" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="failed_collections" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount_collected" type="DECIMAL(19,2)"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Indexes for performance -->
+        <createIndex tableName="sepa_mandates" indexName="idx_mandate_debtor_iban">
+            <column name="debtor_iban"/>
+        </createIndex>
+        <createIndex tableName="sepa_mandates" indexName="idx_mandate_creditor_id">
+            <column name="creditor_id"/>
+        </createIndex>
+        <createIndex tableName="sepa_mandates" indexName="idx_mandate_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="sepa_mandates" indexName="idx_mandate_type">
+            <column name="mandate_type"/>
+        </createIndex>
+        <createIndex tableName="sepa_mandates" indexName="idx_mandate_debtor_account">
+            <column name="debtor_account_number"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="002-create-sanction-matches-table" author="claude">
+        <createTable tableName="sanction_matches">
+            <column name="match_id" type="VARCHAR(50)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="account_number" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="customer_name" type="VARCHAR(200)"><constraints nullable="false"/></column>
+            <column name="national_id" type="VARCHAR(50)"/>
+            <column name="sanctioned_name" type="VARCHAR(200)"><constraints nullable="false"/></column>
+            <column name="sanctioned_entity_id" type="VARCHAR(100)"/>
+            <column name="sanction_list" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="match_score" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="match_status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="match_reason" type="TEXT"/>
+            <column name="alert_id" type="VARCHAR(50)"/>
+            <column name="reviewed_by" type="VARCHAR(100)"/>
+            <column name="reviewed_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex tableName="sanction_matches" indexName="idx_sanction_account"><column name="account_number"/></createIndex>
+    </changeSet>
+</databaseChangeLog>

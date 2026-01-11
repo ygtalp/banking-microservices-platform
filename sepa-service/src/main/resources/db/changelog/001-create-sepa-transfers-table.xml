@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="001-create-sepa-transfers-table" author="claude">
+        <createTable tableName="sepa_transfers">
+            <column name="sepa_reference" type="VARCHAR(50)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="transfer_type" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="debtor_iban" type="VARCHAR(34)"><constraints nullable="false"/></column>
+            <column name="debtor_name" type="VARCHAR(140)"><constraints nullable="false"/></column>
+            <column name="debtor_account_number" type="VARCHAR(20)"/>
+            <column name="debtor_bic" type="VARCHAR(11)"/>
+            <column name="creditor_iban" type="VARCHAR(34)"><constraints nullable="false"/></column>
+            <column name="creditor_name" type="VARCHAR(140)"><constraints nullable="false"/></column>
+            <column name="creditor_bic" type="VARCHAR(11)"/>
+            <column name="amount" type="DECIMAL(19,2)"><constraints nullable="false"/></column>
+            <column name="currency" type="VARCHAR(3)"><constraints nullable="false"/></column>
+            <column name="remittance_information" type="VARCHAR(140)"/>
+            <column name="end_to_end_id" type="VARCHAR(35)"><constraints nullable="false"/></column>
+            <column name="message_id" type="VARCHAR(35)"/>
+            <column name="requested_execution_date" type="DATE"/>
+            <column name="value_date" type="DATE"/>
+            <column name="charge_bearer" type="VARCHAR(10)"/>
+            <column name="iso_xml" type="TEXT"/>
+            <column name="debit_transaction_id" type="VARCHAR(50)"/>
+            <column name="submission_id" type="VARCHAR(50)"/>
+            <column name="external_reference" type="VARCHAR(50)"/>
+            <column name="processed_at" type="TIMESTAMP"/>
+            <column name="error_message" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="sepa_transfers" indexName="idx_sepa_debtor_iban"><column name="debtor_iban"/></createIndex>
+        <createIndex tableName="sepa_transfers" indexName="idx_sepa_creditor_iban"><column name="creditor_iban"/></createIndex>
+        <createIndex tableName="sepa_transfers" indexName="idx_sepa_status"><column name="status"/></createIndex>
+    </changeSet>
+</databaseChangeLog>

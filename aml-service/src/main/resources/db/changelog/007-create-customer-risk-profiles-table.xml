@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="007-create-customer-risk-profiles-table" author="claude">
+        <createTable tableName="customer_risk_profiles">
+            <column name="profile_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="account_number" type="VARCHAR(50)"/>
+            <column name="customer_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_score" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_level" type="VARCHAR(20)" defaultValue="LOW">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_transactions" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flagged_transactions" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blocked_transactions" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_transaction_amount" type="DECIMAL(19,2)"/>
+            <column name="average_transaction_amount" type="DECIMAL(19,2)"/>
+            <column name="max_transaction_amount" type="DECIMAL(19,2)"/>
+            <column name="total_alerts" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="open_alerts" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cleared_alerts" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sar_filed_count" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sanction_matches" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_sanction_check_at" type="TIMESTAMP"/>
+            <column name="is_sanctioned" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_pep" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pep_category" type="VARCHAR(50)"/>
+            <column name="country" type="VARCHAR(50)"/>
+            <column name="high_risk_jurisdiction" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_sector" type="VARCHAR(100)"/>
+            <column name="high_risk_business" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cdd_level" type="VARCHAR(20)" defaultValue="STANDARD">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_cdd_review_at" type="TIMESTAMP"/>
+            <column name="next_cdd_review_at" type="TIMESTAMP"/>
+            <column name="status" type="VARCHAR(20)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blocked_reason" type="TEXT"/>
+            <column name="last_transaction_at" type="TIMESTAMP"/>
+            <column name="last_alert_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Indexes for performance -->
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_customer_id">
+            <column name="customer_id"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_account_number">
+            <column name="account_number"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_risk_level">
+            <column name="risk_level"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_is_sanctioned">
+            <column name="is_sanctioned"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_is_pep">
+            <column name="is_pep"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_country">
+            <column name="country"/>
+        </createIndex>
+        <createIndex tableName="customer_risk_profiles" indexName="idx_crp_next_cdd">
+            <column name="next_cdd_review_at"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="003-create-sepa-batches-table" author="claude">
+        <createTable tableName="sepa_batches">
+            <column name="batch_id" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="batch_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_id" type="VARCHAR(35)">
+                <constraints unique="true"/>
+            </column>
+            <column name="creation_date_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="requested_execution_date" type="DATE"/>
+            <column name="initiating_party_name" type="VARCHAR(140)"/>
+            <column name="initiating_party_id" type="VARCHAR(35)"/>
+            <column name="number_of_transactions" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="DECIMAL(19,2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(3)" defaultValue="EUR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="successful_transactions" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="failed_transactions" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="pending_transactions" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="successful_amount" type="DECIMAL(19,2)" defaultValueNumeric="0"/>
+            <column name="pain_xml" type="TEXT"/>
+            <column name="pacs_xml" type="TEXT"/>
+            <column name="submitted_at" type="TIMESTAMP"/>
+            <column name="submitted_by" type="VARCHAR(100)"/>
+            <column name="submission_reference" type="VARCHAR(50)"/>
+            <column name="processing_started_at" type="TIMESTAMP"/>
+            <column name="processing_completed_at" type="TIMESTAMP"/>
+            <column name="has_errors" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_count" type="INTEGER" defaultValueNumeric="0"/>
+            <column name="error_summary" type="TEXT"/>
+            <column name="source_file_name" type="VARCHAR(200)"/>
+            <column name="source_file_hash" type="VARCHAR(64)"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Join table for batch transfer references (ElementCollection) -->
+        <createTable tableName="sepa_batch_transfers">
+            <column name="batch_id" type="VARCHAR(50)">
+                <constraints nullable="false" foreignKeyName="fk_batch_transfers_batch"
+                             references="sepa_batches(batch_id)" deleteCascade="true"/>
+            </column>
+            <column name="transfer_reference" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Indexes for performance -->
+        <createIndex tableName="sepa_batches" indexName="idx_batch_message_id">
+            <column name="message_id"/>
+        </createIndex>
+        <createIndex tableName="sepa_batches" indexName="idx_batch_status">
+            <column name="status"/>
+        </createIndex>
+        <createIndex tableName="sepa_batches" indexName="idx_batch_type">
+            <column name="batch_type"/>
+        </createIndex>
+        <createIndex tableName="sepa_batches" indexName="idx_batch_initiating_party">
+            <column name="initiating_party_id"/>
+        </createIndex>
+        <createIndex tableName="sepa_batches" indexName="idx_batch_created_at">
+            <column name="created_at"/>
+        </createIndex>
+        <createIndex tableName="sepa_batches" indexName="idx_batch_has_errors">
+            <column name="has_errors"/>
+        </createIndex>
+
+        <!-- Index on join table -->
+        <createIndex tableName="sepa_batch_transfers" indexName="idx_batch_transfer_ref">
+            <column name="transfer_reference"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
