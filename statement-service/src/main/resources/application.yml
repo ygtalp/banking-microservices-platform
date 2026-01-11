@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: statement-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/statement_db
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+  liquibase:
+    enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+
+server:
+  port: 8091
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+jwt:
+  secret: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+
+statement:
+  pdf:
+    directory: ./statements
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:postgresql://postgres-statement:5432/statement_db
+  data:
+    redis:
+      host: redis
+  kafka:
+    bootstrap-servers: kafka:9092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+statement:
+  pdf:
+    directory: /app/statements

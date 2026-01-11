@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: card-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/card_db
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+  liquibase:
+    enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+
+server:
+  port: 8089
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+jwt:
+  secret: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
