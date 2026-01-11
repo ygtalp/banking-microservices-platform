@@ -11,5 +11,7 @@
     <include file="db/changelog/004-create-user-roles-table.xml"/>
     <include file="db/changelog/005-create-role-permissions-table.xml"/>
     <include file="db/changelog/006-insert-default-roles.xml"/>
+    <include file="db/changelog/007-add-mfa-to-users.xml"/>
+    <include file="db/changelog/008-create-mfa-secrets-table.xml"/>
 
 </databaseChangeLog>

@@ -68,6 +68,18 @@ public class User {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
+    // Multi-Factor Authentication
+    @Column(name = "mfa_enabled", nullable = false)
+    @Builder.Default
+    private Boolean mfaEnabled = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "preferred_mfa_method", length = 20)
+    private MfaMethod preferredMfaMethod;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MfaSecret mfaSecret;
+
     // Roles (Many-to-Many)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -114,5 +126,19 @@ public class User {
 
     public void removeRole(Role role) {
         this.roles.remove(role);
+    }
+
+    public void enableMfa(MfaMethod method) {
+        this.mfaEnabled = true;
+        this.preferredMfaMethod = method;
+    }
+
+    public void disableMfa() {
+        this.mfaEnabled = false;
+        this.preferredMfaMethod = null;
+    }
+
+    public boolean isMfaEnabled() {
+        return this.mfaEnabled != null && this.mfaEnabled;
     }
 }

@@ -92,6 +92,8 @@ cleanup-scripts.ps1
 /quick-start.ps1
 /CLAUDE.md
 scripts/
+plans/
+plans/*.md
 
 # Keep important files
 !README.md

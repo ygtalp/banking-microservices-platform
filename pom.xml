@@ -23,6 +23,9 @@
         <module>notification-service</module>
         <module>transaction-service</module>
         <module>fraud-detection-service</module>
+        <module>loan-service</module>
+        <module>card-service</module>
+        <module>statement-service</module>
     </modules>
 
     <properties>

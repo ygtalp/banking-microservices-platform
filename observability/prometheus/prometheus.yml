@@ -73,6 +73,33 @@ scrape_configs:
           application: 'fraud-detection-service'
           service: 'banking'
 
+  # Loan Service
+  - job_name: 'loan-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['loan-service:8088']
+        labels:
+          application: 'loan-service'
+          service: 'banking'
+
+  # Card Service
+  - job_name: 'card-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['card-service:8089']
+        labels:
+          application: 'card-service'
+          service: 'banking'
+
+  # Statement Service
+  - job_name: 'statement-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['statement-service:8091']
+        labels:
+          application: 'statement-service'
+          service: 'banking'
+
   # API Gateway
   - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'
