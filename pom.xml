@@ -26,6 +26,7 @@
         <module>loan-service</module>
         <module>card-service</module>
         <module>statement-service</module>
+        <module>swift-service</module>
     </modules>
 
     <properties>

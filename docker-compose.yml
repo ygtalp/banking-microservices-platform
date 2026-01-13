@@ -640,6 +640,52 @@ services:
       retries: 5
       start_period: 30s
 
+  swift-service:
+    build:
+      context: ./swift-service
+      dockerfile: Dockerfile
+    container_name: banking-swift-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+      account-service:
+        condition: service_started
+      fraud-detection-service:
+        condition: service_started
+      zipkin:
+        condition: service_healthy
+    ports:
+      - "8094:8094"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/banking_swift
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      JWT_SECRET: BankingPlatformSecretKeyForHS512AlgorithmMustBeAtLeast64CharactersLongForSecurityCompliance2024
+      ZIPKIN_URL: http://zipkin:9411/api/v2/spans
+      SWIFT_CORRESPONDENT_BANK_BIC: CHASUS33XXX
+      SWIFT_CORRESPONDENT_BANK_NAME: JP Morgan Chase Bank
+      SWIFT_FEES_FIXED_FEE: 25.00
+      SWIFT_FEES_PERCENTAGE_FEE: 0.001
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8094 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
 volumes:
   postgres_data:
   redis_data:

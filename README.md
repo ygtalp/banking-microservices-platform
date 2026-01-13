@@ -454,12 +454,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Built as interview preparation for **ABN AMRO** and Dutch banking sector
-- Inspired by enterprise banking architecture best practices
-- Demonstrates 30 days of intensive development (Dec 3, 2025 - Jan 1, 2026)
-- Showcases senior backend developer capabilities for European banking roles
+Educational project built for learning and portfolio purposes.
 
 ---
 
