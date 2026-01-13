@@ -7,7 +7,7 @@ import com.banking.account.model.Currency;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4f;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -165,7 +165,7 @@ public class EventSourcingService {
                     applyBalanceUpdated(account, data);
                     break;
                 case ACCOUNT_SUSPENDED:
-                    account.setStatus(AccountStatus.SUSPENDED);
+                    account.setStatus(AccountStatus.FROZEN);
                     break;
                 case ACCOUNT_ACTIVATED:
                     account.setStatus(AccountStatus.ACTIVE);
@@ -185,7 +185,7 @@ public class EventSourcingService {
 
     private void applyAccountCreated(Account account, Map<String, Object> data) {
         account.setCustomerName((String) data.get("customerName"));
-        account.setIban((String) data.get("iban"));
+        account.setAccountNumber((String) data.get("accountNumber"));
         account.setAccountType(AccountType.valueOf((String) data.get("accountType")));
         account.setCurrency(Currency.valueOf((String) data.get("currency")));
         account.setBalance(new BigDecimal(data.get("balance").toString()));
