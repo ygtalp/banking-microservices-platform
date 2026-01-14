@@ -87,7 +87,7 @@ class AuthServiceTest {
                 .build();
 
         customerRole = Role.builder()
-                .roleName("CUSTOMER")
+                .roleName("ROLE_CUSTOMER")
                 .description("Customer role")
                 .permissions(new HashSet<>())
                 .build();
@@ -118,11 +118,11 @@ class AuthServiceTest {
     void testRegister_Success() {
         // Arrange
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(roleRepository.findByRoleName("CUSTOMER")).thenReturn(Optional.of(customerRole));
+        when(roleRepository.findByRoleName("ROLE_CUSTOMER")).thenReturn(Optional.of(customerRole));
         when(passwordEncoder.encode(anyString())).thenReturn("$2a$12$hashedpassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtTokenProvider.generateAccessToken(any(Authentication.class))).thenReturn("access-token");
-        when(jwtTokenProvider.generateRefreshToken(any(Authentication.class))).thenReturn("refresh-token");
+        when(jwtTokenProvider.generateAccessTokenFromUsername(anyString(), anyList())).thenReturn("access-token");
+        when(jwtTokenProvider.generateRefreshTokenFromUsername(anyString(), anyList())).thenReturn("refresh-token");
         when(kafkaTemplate.send(anyString(), any())).thenReturn(null);
 
         // Act

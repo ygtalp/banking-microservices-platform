@@ -65,17 +65,14 @@ public class MfaController {
 
         if (isVerified) {
             log.info("TOTP enabled for user: {}", userId);
-            return ResponseEntity.ok(new ApiResponse(
-                    "success",
+            return ResponseEntity.ok(ApiResponse.success(
                     "TOTP enabled successfully. Your account is now protected with Two-Factor Authentication.",
                     null
             ));
         } else {
             log.warn("TOTP verification failed for user: {}", userId);
-            return ResponseEntity.badRequest().body(new ApiResponse(
-                    "error",
-                    "Invalid TOTP code. Please try again.",
-                    null
+            return ResponseEntity.badRequest().body(ApiResponse.error(
+                    "Invalid TOTP code. Please try again."
             ));
         }
     }
@@ -93,10 +90,8 @@ public class MfaController {
         String userId = extractUserId(authentication);
 
         if (request.getPhoneNumber() == null || request.getPhoneNumber().isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(
-                    "error",
-                    "Phone number is required for SMS MFA",
-                    null
+            return ResponseEntity.badRequest().body(ApiResponse.error(
+                    "Phone number is required for SMS MFA"
             ));
         }
 
@@ -105,8 +100,7 @@ public class MfaController {
         log.info("SMS OTP sent to user: {}", userId);
 
         // In development, return OTP. In production, send via SMS and don't return
-        return ResponseEntity.ok(new ApiResponse(
-                "success",
+        return ResponseEntity.ok(ApiResponse.success(
                 "Verification code sent to your phone. (DEV: " + otp + ")",
                 null
         ));
@@ -127,17 +121,14 @@ public class MfaController {
 
         if (isVerified) {
             log.info("SMS MFA enabled for user: {}", userId);
-            return ResponseEntity.ok(new ApiResponse(
-                    "success",
+            return ResponseEntity.ok(ApiResponse.success(
                     "SMS MFA enabled successfully.",
                     null
             ));
         } else {
             log.warn("SMS verification failed for user: {}", userId);
-            return ResponseEntity.badRequest().body(new ApiResponse(
-                    "error",
-                    "Invalid or expired SMS code. Please try again.",
-                    null
+            return ResponseEntity.badRequest().body(ApiResponse.error(
+                    "Invalid or expired SMS code. Please try again."
             ));
         }
     }
@@ -155,8 +146,7 @@ public class MfaController {
         log.info("Email OTP sent to user: {}", userId);
 
         // In development, return OTP. In production, send via email and don't return
-        return ResponseEntity.ok(new ApiResponse(
-                "success",
+        return ResponseEntity.ok(ApiResponse.success(
                 "Verification code sent to your email. (DEV: " + otp + ")",
                 null
         ));
@@ -177,17 +167,14 @@ public class MfaController {
 
         if (isVerified) {
             log.info("Email MFA enabled for user: {}", userId);
-            return ResponseEntity.ok(new ApiResponse(
-                    "success",
+            return ResponseEntity.ok(ApiResponse.success(
                     "Email MFA enabled successfully.",
                     null
             ));
         } else {
             log.warn("Email verification failed for user: {}", userId);
-            return ResponseEntity.badRequest().body(new ApiResponse(
-                    "error",
-                    "Invalid or expired email code. Please try again.",
-                    null
+            return ResponseEntity.badRequest().body(ApiResponse.error(
+                    "Invalid or expired email code. Please try again."
             ));
         }
     }
@@ -244,8 +231,7 @@ public class MfaController {
         mfaService.disableMfa(userId);
 
         log.info("MFA disabled for user: {}", userId);
-        return ResponseEntity.ok(new ApiResponse(
-                "success",
+        return ResponseEntity.ok(ApiResponse.success(
                 "Multi-Factor Authentication has been disabled.",
                 null
         ));
