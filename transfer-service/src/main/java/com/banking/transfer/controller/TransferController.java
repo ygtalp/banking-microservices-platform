@@ -35,7 +35,7 @@ public class TransferController {
 
     @GetMapping("/{transferReference}")
     public ResponseEntity<ApiResponse<TransferResponse>> getTransfer(
-            @PathVariable String transferReference) {
+            @PathVariable("transferReference") String transferReference) {
         log.info("GET /api/v1/transfers/{} - Fetching transfer", transferReference);
 
         TransferResponse response = transferService.getTransferByReference(transferReference);
@@ -45,7 +45,7 @@ public class TransferController {
 
     @GetMapping("/account/{accountNumber}")
     public ResponseEntity<ApiResponse<List<TransferResponse>>> getTransfersByAccount(
-            @PathVariable String accountNumber) {
+            @PathVariable("accountNumber") String accountNumber) {
         log.info("GET /api/v1/transfers/account/{} - Fetching transfers", accountNumber);
 
         List<TransferResponse> transfers = transferService.getTransfersByAccount(accountNumber);
@@ -56,7 +56,7 @@ public class TransferController {
 
     @GetMapping("/from/{accountNumber}")
     public ResponseEntity<ApiResponse<List<TransferResponse>>> getTransfersFrom(
-            @PathVariable String accountNumber) {
+            @PathVariable("accountNumber") String accountNumber) {
         log.info("GET /api/v1/transfers/from/{} - Fetching outgoing transfers", accountNumber);
 
         List<TransferResponse> transfers = transferService.getTransfersFrom(accountNumber);
@@ -67,7 +67,7 @@ public class TransferController {
 
     @GetMapping("/to/{accountNumber}")
     public ResponseEntity<ApiResponse<List<TransferResponse>>> getTransfersTo(
-            @PathVariable String accountNumber) {
+            @PathVariable("accountNumber") String accountNumber) {
         log.info("GET /api/v1/transfers/to/{} - Fetching incoming transfers", accountNumber);
 
         List<TransferResponse> transfers = transferService.getTransfersTo(accountNumber);
